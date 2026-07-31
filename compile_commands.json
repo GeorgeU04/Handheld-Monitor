@@ -1,0 +1,80 @@
+[
+  {
+    "directory": "/home/george/Code/Embedded/STM32/Handheld-Monitor",
+    "file": "/home/george/Code/Embedded/STM32/Handheld-Monitor/Core/Src/main.c",
+    "output": "/home/george/Code/Embedded/STM32/Handheld-Monitor/build/main.o",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DSTM32L432xx",
+      "-ICore/Inc",
+      "-Ilib/CMSIS/Core/Include",
+      "-Ilib/CMSIS/Device/Include",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-gdwarf-2",
+      "-o",
+      "/home/george/Code/Embedded/STM32/Handheld-Monitor/build/main.o",
+      "/home/george/Code/Embedded/STM32/Handheld-Monitor/Core/Src/main.c"
+    ]
+  },
+  {
+    "directory": "/home/george/Code/Embedded/STM32/Handheld-Monitor",
+    "file": "/home/george/Code/Embedded/STM32/Handheld-Monitor/lib/CMSIS/Device/Source/system_stm32l4xx.c",
+    "output": "/home/george/Code/Embedded/STM32/Handheld-Monitor/build/system_stm32l4xx.o",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DSTM32L432xx",
+      "-ICore/Inc",
+      "-Ilib/CMSIS/Core/Include",
+      "-Ilib/CMSIS/Device/Include",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-gdwarf-2",
+      "-o",
+      "/home/george/Code/Embedded/STM32/Handheld-Monitor/build/system_stm32l4xx.o",
+      "/home/george/Code/Embedded/STM32/Handheld-Monitor/lib/CMSIS/Device/Source/system_stm32l4xx.c"
+    ]
+  },
+  {
+    "directory": "/home/george/Code/Embedded/STM32/Handheld-Monitor",
+    "file": "/home/george/Code/Embedded/STM32/Handheld-Monitor/COre/Src/USART.c",
+    "output": "/home/george/Code/Embedded/STM32/Handheld-Monitor/build/USART.o",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DSTM32L432xx",
+      "-ICore/Inc",
+      "-Ilib/CMSIS/Core/Include",
+      "-Ilib/CMSIS/Device/Include",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-gdwarf-2",
+      "-o",
+      "/home/george/Code/Embedded/STM32/Handheld-Monitor/build/USART.o",
+      "/home/george/Code/Embedded/STM32/Handheld-Monitor/COre/Src/USART.c"
+    ]
+  }
+]
