@@ -5,4 +5,6 @@
 
 void initPins(void);
 
+#define LED_PIN 4U
+
 #endif // !MAIN_H
