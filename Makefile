@@ -20,7 +20,8 @@ BUILD_DIR = build
 C_SOURCES = \
 Core/Src/main.c \
 lib/CMSIS/Device/Source/system_stm32l4xx.c \
-COre/Src/USART.c 
+Core/Src/USART.c \
+Core/Src/SPI.c \
 
 ASM_SOURCES = \
 lib/CMSIS/Device/Source/startup_stm32l432xx.s

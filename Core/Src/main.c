@@ -1,8 +1,9 @@
 #include "main.h"
+#include "SPI.h"
 #include "USART.h"
 #include "stm32l432xx.h"
 #include <stdint.h>
-
+#define USINGSPI 1
 // TODO: Make a real ms delay with timer
 void delay(uint32_t delay) {
   while (delay--) {
@@ -58,6 +59,7 @@ void initPins(void) {
   /*
    * PB3 - SPI1_SCK - AF5
    */
+#if USINGSPI
   GPIOB->MODER &= ~GPIO_MODER_MODER3;  // Clear PB3 mode
   GPIOB->MODER |= GPIO_MODER_MODER3_1; // Set PB3 as alternate function
 
@@ -71,7 +73,6 @@ void initPins(void) {
   /*
    * PB4 - SPI1_MISO - AF5
    *
-   * Needed for reading data back from the BME280.
    */
   GPIOB->MODER &= ~GPIO_MODER_MODER4;  // Clear PB4 mode
   GPIOB->MODER |= GPIO_MODER_MODER4_1; // Set PB4 as alternate function
@@ -148,28 +149,24 @@ void initPins(void) {
   GPIOB->OSPEEDR &= ~GPIO_OSPEEDR_OSPEED0; // Set PB0 low speed
   GPIOB->PUPDR &= ~GPIO_PUPDR_PUPD0;       // Set PB0 no pull-up/down
 
-  /*
-   * ============================================================
-   * Initial Output States
-   * ============================================================
-   *
-   * Both SPI devices start deselected.
-   */
-
   GPIOA->BSRR = GPIO_BSRR_BS11; // ST7789 CS high
   GPIOB->BSRR = GPIO_BSRR_BS0;  // BME280 CS high
 
   GPIOA->BSRR = GPIO_BSRR_BS8; // ST7789 DC high - data mode
   GPIOB->BSRR = GPIO_BSRR_BS1; // ST7789 RESET high
+#endif
 }
 
 int main(void) {
   initPins();
   USART2Init(115200);
-  GPIOB->BSRR |= LED_PIN; // Set to high
+  initSPI1();
+  const uint8_t buffer[4] = {0x34, 0x4F, 0xFF, 0x43};
+  GPIOA->BSRR |= (1 << LED_PIN); // Set to high
   while (1) {
     USART2SendString((uint8_t *)"Hello\r\n");
-    delay(10000);
+    SPI1Send(buffer, sizeof(buffer));
+    delay(100000);
   }
   return 0;
 }

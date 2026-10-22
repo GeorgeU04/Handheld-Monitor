@@ -1,4 +1,5 @@
 #include "SPI.h"
+#include "stm32l432xx.h"
 
 void initSPI1(void) {
   RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; // Enable SPI1
@@ -17,3 +18,16 @@ void initSPI1(void) {
   SPI1->CR2 |= SPI_CR2_FRXTH; // Set RXNE to generate if FIFO level is >= 1/4
   SPI1->CR1 |= SPI_CR1_SPE;   // Enable SPI
 }
+
+void SPI1Send(const uint8_t *data, size_t size) {
+  size_t i = 0;
+  while (i < size) {
+    while (!(SPI1->SR & SPI_SR_TXE)) // Wait for transmit buffer to become empty
+      ;
+    SPI1->DR = data[i++]; // Load data into data register
+  }
+  while (SPI1->SR & SPI_SR_BSY) // Wait until not busy to return
+    ;
+}
+
+void SPI1Read(uint8_t *buffer) {}

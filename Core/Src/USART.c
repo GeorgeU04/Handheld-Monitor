@@ -1,7 +1,7 @@
 #include "USART.h"
 #include <stddef.h>
 
-void USART2Init(uint32_t baud) {
+void USART2Init(const uint32_t baud) {
   RCC->APB1ENR1 |= RCC_APB1ENR1_USART2EN; // Enable USART2
   RCC->CCIPR &= ~RCC_CCIPR_USART2SEL;     // Clear clock selection
   RCC->CCIPR |= RCC_CCIPR_USART2SEL_0;    // Set system clock as USART2 clock
@@ -17,14 +17,14 @@ void USART2Init(uint32_t baud) {
   USART2->CR1 |= USART_CR1_UE;          // Enable USART
 }
 
-void USART2SendByte(uint8_t byte) {
+void USART2SendByte(const uint8_t byte) {
   USART2->CR1 |= USART_CR1_TE;
   USART2->TDR = byte;
   while (!(USART2->ISR & USART_ISR_TC))
     ;
 };
 
-void USART2SendString(uint8_t *string) {
+void USART2SendString(const uint8_t *string) {
   USART2->CR1 |= USART_CR1_TE;
   while (*string) {
     USART2->TDR = *string++;
