@@ -102,5 +102,31 @@
       "/home/george/Code/Embedded/STM32/Handheld-Monitor/build/SPI.o",
       "/home/george/Code/Embedded/STM32/Handheld-Monitor/Core/Src/SPI.c"
     ]
+  },
+  {
+    "directory": "/home/george/Code/Embedded/STM32/Handheld-Monitor",
+    "file": "/home/george/Code/Embedded/STM32/Handheld-Monitor/Core/Src/BME280.c",
+    "output": "/home/george/Code/Embedded/STM32/Handheld-Monitor/build/BME280.o",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DSTM32L432xx",
+      "-ICore/Inc",
+      "-Ilib/CMSIS/Core/Include",
+      "-Ilib/CMSIS/Device/Include",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-gdwarf-2",
+      "-o",
+      "/home/george/Code/Embedded/STM32/Handheld-Monitor/build/BME280.o",
+      "/home/george/Code/Embedded/STM32/Handheld-Monitor/Core/Src/BME280.c"
+    ]
   }
 ]

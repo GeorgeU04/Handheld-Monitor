@@ -1,7 +1,9 @@
 #include "SPI.h"
 #include "stm32l432xx.h"
+#include <stddef.h>
+#include <stdint.h>
 
-void initSPI1(void) {
+void SPI1init(void) {
   RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; // Enable SPI1
   SPI1->CR1 &= ~SPI_CR1_BIDIMODE;     // Enable 2 line unidirectional data mode
   SPI1->CR1 &= ~SPI_CR1_RXONLY;       // Enable full duplex
@@ -19,15 +21,31 @@ void initSPI1(void) {
   SPI1->CR1 |= SPI_CR1_SPE;   // Enable SPI
 }
 
-void SPI1Send(const uint8_t *data, size_t size) {
-  size_t i = 0;
-  while (i < size) {
-    while (!(SPI1->SR & SPI_SR_TXE)) // Wait for transmit buffer to become empty
-      ;
-    SPI1->DR = data[i++]; // Load data into data register
-  }
-  while (SPI1->SR & SPI_SR_BSY) // Wait until not busy to return
+static uint8_t SPI1Transfer(uint8_t tx) {
+  while (!(SPI1->SR & SPI_SR_TXE)) // wait until buffer is empty
     ;
+
+  // funny cast to 8 bit as register is 32 but we only want 8
+  *(volatile uint8_t *)&SPI1->DR = tx;
+
+  while (!(SPI1->SR & SPI_SR_RXNE)) // wait until buffer is not empty
+    ;
+
+  while (SPI1->SR & SPI_SR_BSY)
+    ;
+
+  // another funny cast to 8 bit as register is 32
+  return *(volatile uint8_t *)&SPI1->DR;
 }
 
-void SPI1Read(uint8_t *buffer) {}
+void SPI1Send(const uint8_t *data, size_t size) {
+  size_t i = 0;
+  while (i < size)
+    SPI1Transfer(data[i++]);
+}
+
+void SPI1Read(uint8_t *buffer, size_t size) {
+  size_t i = 0;
+  while (i < size)
+    buffer[i++] = SPI1Transfer(0xFF);
+}

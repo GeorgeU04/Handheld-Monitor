@@ -22,6 +22,7 @@ Core/Src/main.c \
 lib/CMSIS/Device/Source/system_stm32l4xx.c \
 Core/Src/USART.c \
 Core/Src/SPI.c \
+Core/Src/BME280.c \
 
 ASM_SOURCES = \
 lib/CMSIS/Device/Source/startup_stm32l432xx.s
@@ -79,7 +80,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 LDSCRIPT = STM32L432KCUx_FLASH.ld
 LIBS = -lc -lm -lnosys
 LIBDIR =
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) \
+LDFLAGS = $(MCU) -specs=nano.specs -u_printf_float -T$(LDSCRIPT) $(LIBDIR) $(LIBS) \
 	-Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 #######################################

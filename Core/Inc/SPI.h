@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-void initSPI1(void);
+void SPI1init(void);
 void SPI1Send(const uint8_t *data, size_t size);
-void SPI1Read(uint8_t *buffer);
+void SPI1Read(uint8_t *buffer, size_t size);
 #endif // !SPI_H
