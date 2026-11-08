@@ -13,14 +13,12 @@ struct ST7789 {
   uint16_t RSTPin;
 };
 
-void initScreen(struct ST7789 *screen, GPIO_TypeDef *CSPort, uint16_t CSPin,
-                GPIO_TypeDef *DCPort, uint16_t DCPin, GPIO_TypeDef *RSTPort,
-                uint16_t RSTPin);
-void setup(const struct ST7789 *screen);
+void initST7789Screen(struct ST7789 *screen, GPIO_TypeDef *CSPort,
+                      uint16_t CSPin, GPIO_TypeDef *DCPort, uint16_t DCPin,
+                      GPIO_TypeDef *RSTPort, uint16_t RSTPin);
+void ST7789setup(const struct ST7789 *screen);
 
-void writeCommand(struct ST7789 *screen, uint8_t command);
-void writeData(struct ST7789 *screen, uint8_t data);
-
+// Defines from Adafuit's Library, I did not want to type them out
 #define ST77XX_NOP 0x00
 #define ST77XX_SWRESET 0x01
 #define ST77XX_RDDID 0x04

@@ -1,6 +1,7 @@
 #include "main.h"
 #include "BME280.h"
 #include "SPI.h"
+#include "ST7789.h"
 #include "Timer.h"
 #include "USART.h"
 #include "stm32l432xx.h"
@@ -169,7 +170,10 @@ int main(void) {
   TIMER2Init();
   USART2Init(115200);
   SPI1init();
+
   struct BME280 sensor = {0};
+  struct ST7789 screen = {0};
+  initST7789Screen(&screen, GPIOA, 11, GPIOA, 8, GPIOB, 1);
   initBME280(&sensor, GPIOB, 0);
   uint8_t buffer[128];
 
@@ -180,6 +184,5 @@ int main(void) {
     USART2SendString(buffer);
     delayMS(500);
   }
-
   return 0;
 }
