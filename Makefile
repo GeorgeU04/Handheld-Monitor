@@ -23,6 +23,7 @@ lib/CMSIS/Device/Source/system_stm32l4xx.c \
 Core/Src/USART.c \
 Core/Src/SPI.c \
 Core/Src/BME280.c \
+Core/Src/Timer.c \
 
 ASM_SOURCES = \
 lib/CMSIS/Device/Source/startup_stm32l432xx.s

@@ -1,16 +1,22 @@
 #include "main.h"
 #include "BME280.h"
 #include "SPI.h"
+#include "Timer.h"
 #include "USART.h"
 #include "stm32l432xx.h"
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 
-// TODO: Make a real ms delay with timer
-void delay(uint32_t delay) {
-  while (delay--) {
-    __NOP();
+void clockInit(void) {
+  FLASH->ACR |= FLASH_ACR_PRFTEN | FLASH_ACR_ICEN;
+
+  RCC->CR |= RCC_CR_MSIRGSEL;
+  RCC->CR = (RCC->CR & ~RCC_CR_MSIRANGE) | RCC_CR_MSIRANGE_8; // 16 MHz
+  while ((RCC->CR & RCC_CR_MSIRDY) == 0) {
   }
+
+  SystemCoreClock = 16000000U;
 }
 
 void initPins(void) {
@@ -159,6 +165,8 @@ void initPins(void) {
 
 int main(void) {
   initPins();
+  clockInit();
+  TIMER2Init();
   USART2Init(115200);
   SPI1init();
   struct BME280 sensor = {0};
@@ -170,7 +178,8 @@ int main(void) {
     snprintf((char *)buffer, sizeof(buffer), "Temperature: %f\r\n",
              sensor.data.temperature / 100.0f);
     USART2SendString(buffer);
-    delay(100000);
+    delayMS(500);
   }
+
   return 0;
 }
