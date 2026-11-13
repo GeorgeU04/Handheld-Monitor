@@ -24,6 +24,7 @@ Core/Src/USART.c \
 Core/Src/SPI.c \
 Core/Src/BME280.c \
 Core/Src/Timer.c \
+Core/Src/ST7789.c
 
 ASM_SOURCES = \
 lib/CMSIS/Device/Source/startup_stm32l432xx.s

@@ -1,6 +1,7 @@
 #include "ST7789.h"
 #include "SPI.h"
 #include "Timer.h"
+#include <stddef.h>
 #include <stdint.h>
 
 void initST7789Screen(struct ST7789 *screen, GPIO_TypeDef *CSPort,
@@ -41,7 +42,7 @@ void ST7789setup(const struct ST7789 *screen) {
   delayMS(10);
 
   writeCommand(screen, ST77XX_MADCTL);
-  writeData(screen, 0x08); // Row/col address, bottom-to-top refresh
+  writeData(screen, ST77XX_MADCTL_RGB); // RGB order, default scan direction
 
   writeCommand(screen, ST77XX_CASET);
   writeData(screen, 0x00);
@@ -63,4 +64,16 @@ void ST7789setup(const struct ST7789 *screen) {
 
   writeCommand(screen, ST77XX_DISPON);
   delayMS(10);
+}
+
+void fillSolid(const struct ST7789 *screen, uint16_t color) {
+  writeCommand(screen, ST77XX_RAMWR);
+
+  screen->CSPort->BSRR = (1 << screen->CSPin << 16);
+  screen->DCPort->BSRR = (1 << screen->DCPin); // Set for data
+  for (size_t i = 0; i < 320 * 240; i++) {
+    SPI1Transfer((uint8_t)(color >> 8)); // Send high byte
+    SPI1Transfer((uint8_t)color);        // Send low byte
+  }
+  screen->CSPort->BSRR = (1 << screen->CSPin);
 }

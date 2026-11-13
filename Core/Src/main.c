@@ -174,15 +174,17 @@ int main(void) {
   struct BME280 sensor = {0};
   struct ST7789 screen = {0};
   initST7789Screen(&screen, GPIOA, 11, GPIOA, 8, GPIOB, 1);
-  initBME280(&sensor, GPIOB, 0);
+  ST7789setup(&screen);
+  // initBME280(&sensor, GPIOB, 0);
+  fillSolid(&screen, ST77XX_GREEN);
   uint8_t buffer[128];
 
   while (1) {
-    readWeatherData(&sensor);
-    snprintf((char *)buffer, sizeof(buffer), "Temperature: %f\r\n",
-             sensor.data.temperature / 100.0f);
-    USART2SendString(buffer);
-    delayMS(500);
+    // readWeatherData(&sensor);
+    // snprintf((char *)buffer, sizeof(buffer), "Temperature: %f\r\n",
+    //   sensor.data.temperature / 100.0f);
+    // USART2SendString(buffer);
+    // delayMS(500);
   }
   return 0;
 }

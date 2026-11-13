@@ -21,7 +21,7 @@ void SPI1init(void) {
   SPI1->CR1 |= SPI_CR1_SPE;   // Enable SPI
 }
 
-static uint8_t SPI1Transfer(uint8_t tx) {
+uint8_t SPI1Transfer(uint8_t tx) {
   while (!(SPI1->SR & SPI_SR_TXE)) // wait until buffer is empty
     ;
 

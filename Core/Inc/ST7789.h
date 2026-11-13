@@ -18,6 +18,8 @@ void initST7789Screen(struct ST7789 *screen, GPIO_TypeDef *CSPort,
                       GPIO_TypeDef *RSTPort, uint16_t RSTPin);
 void ST7789setup(const struct ST7789 *screen);
 
+void fillSolid(const struct ST7789 *screen, uint16_t color);
+
 // Defines from Adafuit's Library, I did not want to type them out
 #define ST77XX_NOP 0x00
 #define ST77XX_SWRESET 0x01
@@ -48,6 +50,7 @@ void ST7789setup(const struct ST7789 *screen);
 #define ST77XX_MADCTL_MX 0x40
 #define ST77XX_MADCTL_MV 0x20
 #define ST77XX_MADCTL_ML 0x10
+#define ST77XX_MADCTL_BGR 0x08
 #define ST77XX_MADCTL_RGB 0x00
 
 #define ST77XX_RDID1 0xDA
