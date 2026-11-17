@@ -4,6 +4,8 @@
 #include "ST7789.h"
 #include "Timer.h"
 #include "USART.h"
+#include "font.h"
+#include "graphics.h"
 #include "stm32l432xx.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -175,16 +177,18 @@ int main(void) {
   struct ST7789 screen = {0};
   initST7789Screen(&screen, GPIOA, 11, GPIOA, 8, GPIOB, 1);
   ST7789setup(&screen);
-  // initBME280(&sensor, GPIOB, 0);
-  fillSolid(&screen, ST77XX_GREEN);
+  initBME280(&sensor, GPIOB, 0);
+  setBackgroundColor(&screen, ST77XX_BLACK);
+  writeString(&screen, (const uint8_t *)"Hello World", &mediumFont, 0, 0,
+              ST77XX_WHITE);
   uint8_t buffer[128];
 
   while (1) {
-    // readWeatherData(&sensor);
-    // snprintf((char *)buffer, sizeof(buffer), "Temperature: %f\r\n",
-    //   sensor.data.temperature / 100.0f);
-    // USART2SendString(buffer);
-    // delayMS(500);
+    readWeatherData(&sensor);
+    snprintf((char *)buffer, sizeof(buffer), "Temperature: %f\r\n",
+             sensor.data.temperature / 100.0f);
+    USART2SendString(buffer);
+    delayMS(500);
   }
   return 0;
 }

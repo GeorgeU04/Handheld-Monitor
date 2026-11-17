@@ -24,7 +24,9 @@ Core/Src/USART.c \
 Core/Src/SPI.c \
 Core/Src/BME280.c \
 Core/Src/Timer.c \
-Core/Src/ST7789.c
+Core/Src/ST7789.c \
+Core/Src/font.c \
+Core/Src/graphics.c
 
 ASM_SOURCES = \
 lib/CMSIS/Device/Source/startup_stm32l432xx.s
@@ -67,8 +69,8 @@ C_INCLUDES = \
 -Ilib/CMSIS/Core/Include \
 -Ilib/CMSIS/Device/Include \
 
-ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
-CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -Wextra -fdata-sections -ffunction-sections
+CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -Wextra -fdata-sections -ffunction-sections
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2

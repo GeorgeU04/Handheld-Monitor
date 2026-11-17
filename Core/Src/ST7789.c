@@ -16,7 +16,7 @@ void initST7789Screen(struct ST7789 *screen, GPIO_TypeDef *CSPort,
   screen->RSTPort->BSRR = (1 << screen->RSTPin);
 }
 
-static void writeCommand(const struct ST7789 *screen, uint8_t command) {
+void writeCommand(const struct ST7789 *screen, uint8_t command) {
   screen->CSPort->BSRR = (1 << screen->CSPin << 16);
   screen->DCPort->BSRR = (1 << screen->DCPin << 16); // Reset for command
   SPI1Send(&command, 1);
@@ -47,14 +47,14 @@ void ST7789setup(const struct ST7789 *screen) {
   writeCommand(screen, ST77XX_CASET);
   writeData(screen, 0x00);
   writeData(screen, 0); // XSTART = 0
-  writeData(screen, 0);
-  writeData(screen, 240); // XEND = 240
+  writeData(screen, (uint8_t)((ST7789_WIDTH - 1) >> 8));
+  writeData(screen, (uint8_t)(ST7789_WIDTH - 1)); // XEND = 239
 
   writeCommand(screen, ST77XX_RASET);
   writeData(screen, 0x00);
   writeData(screen, 0); // YSTART = 0
-  writeData(screen, 0x01);
-  writeData(screen, 0x40); // YEND = 320
+  writeData(screen, (uint8_t)((ST7789_HEIGHT - 1) >> 8));
+  writeData(screen, (uint8_t)(ST7789_HEIGHT - 1)); // YEND = 319
 
   writeCommand(screen, ST77XX_INVON);
   delayMS(10);
@@ -66,7 +66,54 @@ void ST7789setup(const struct ST7789 *screen) {
   delayMS(10);
 }
 
+void setCursorPosition(const struct ST7789 *screen, uint16_t x, uint16_t y) {
+  if (x > ST7789_WIDTH - 1)
+    x = ST7789_WIDTH - 1;
+  if (y > ST7789_HEIGHT - 1)
+    y = ST7789_HEIGHT - 1;
+
+  writeCommand(screen, ST77XX_CASET);
+  writeData(screen, (uint8_t)(x >> 8));
+  writeData(screen, (uint8_t)x);
+  writeData(screen, (uint8_t)((ST7789_WIDTH - 1) >> 8));
+  writeData(screen, (uint8_t)(ST7789_WIDTH - 1));
+
+  writeCommand(screen, ST77XX_RASET);
+  writeData(screen, (uint8_t)(y >> 8));
+  writeData(screen, (uint8_t)y);
+  writeData(screen, (uint8_t)((ST7789_HEIGHT - 1) >> 8));
+  writeData(screen, (uint8_t)(ST7789_HEIGHT - 1));
+}
+
+void setBoundCursor(const struct ST7789 *screen, uint16_t x1, uint16_t x2,
+                    uint16_t y1, uint16_t y2) {
+  if (x1 > ST7789_WIDTH - 1)
+    x1 = ST7789_WIDTH - 1;
+  if (x2 > ST7789_WIDTH - 1)
+    x2 = ST7789_WIDTH - 1;
+  if (y1 > ST7789_HEIGHT - 1)
+    y1 = ST7789_HEIGHT - 1;
+  if (y2 > ST7789_HEIGHT - 1)
+    y2 = ST7789_HEIGHT - 1;
+  if (x1 > x2)
+    x1 = x2;
+  if (y1 > y2)
+    y1 = y2;
+  writeCommand(screen, ST77XX_CASET);
+  writeData(screen, (uint8_t)(x1 >> 8));
+  writeData(screen, (uint8_t)(x1));
+  writeData(screen, (uint8_t)(x2 >> 8));
+  writeData(screen, (uint8_t)(x2));
+
+  writeCommand(screen, ST77XX_RASET);
+  writeData(screen, (uint8_t)(y1 >> 8));
+  writeData(screen, (uint8_t)(y1));
+  writeData(screen, (uint8_t)(y2 >> 8));
+  writeData(screen, (uint8_t)(y2));
+}
+
 void fillSolid(const struct ST7789 *screen, uint16_t color) {
+  setCursorPosition(screen, 0, 0);
   writeCommand(screen, ST77XX_RAMWR);
 
   screen->CSPort->BSRR = (1 << screen->CSPin << 16);

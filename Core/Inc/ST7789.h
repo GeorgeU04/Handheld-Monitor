@@ -4,6 +4,9 @@
 #include "stm32l4xx.h"
 #include <stdint.h>
 
+#define ST7789_WIDTH 240U
+#define ST7789_HEIGHT 320U
+
 struct ST7789 {
   GPIO_TypeDef *CSPort;
   GPIO_TypeDef *DCPort;
@@ -19,6 +22,13 @@ void initST7789Screen(struct ST7789 *screen, GPIO_TypeDef *CSPort,
 void ST7789setup(const struct ST7789 *screen);
 
 void fillSolid(const struct ST7789 *screen, uint16_t color);
+
+void setCursorPosition(const struct ST7789 *screen, uint16_t x, uint16_t y);
+
+void setBoundCursor(const struct ST7789 *screen, uint16_t x1, uint16_t x2,
+                    uint16_t y1, uint16_t y2);
+
+void writeCommand(const struct ST7789 *screen, uint8_t command);
 
 // Defines from Adafuit's Library, I did not want to type them out
 #define ST77XX_NOP 0x00
