@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-/* Packed 1px bitmaps. Bit 7 of each byte is the leftmost pixel.
- * Order in each array: 0-9, A-Z, a-z.
+/* Packed Times-style bitmaps. Bit 7 of each byte is the leftmost pixel.
+ * Order in each array: ASCII 32-127. Index is the character code minus 32.
  * small:       5x7,  1 byte per row
  * medium:      8x12, 1 byte per row
  * large:       12x18, 2 bytes per row
@@ -26,7 +26,7 @@ struct font {
 extern const struct font smallFont;
 extern const struct font mediumFont;
 extern const struct font largeFont;
-extern const struct font extraLageFont;
+extern const struct font extraLargeFont;
 
 int8_t getCharIndex(uint8_t c);
 

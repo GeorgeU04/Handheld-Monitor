@@ -179,15 +179,15 @@ int main(void) {
   ST7789setup(&screen);
   initBME280(&sensor, GPIOB, 0);
   setBackgroundColor(&screen, ST77XX_BLACK);
-  writeString(&screen, (const uint8_t *)"Hello World", &mediumFont, 0, 0,
-              ST77XX_WHITE);
   uint8_t buffer[128];
 
   while (1) {
     readWeatherData(&sensor);
-    snprintf((char *)buffer, sizeof(buffer), "Temperature: %f\r\n",
+    snprintf((char *)buffer, sizeof(buffer), "Temperature: %.02f C\r\n",
              sensor.data.temperature / 100.0f);
-    USART2SendString(buffer);
+    // USART2SendString(buffer);
+    writeString(&screen, (const uint8_t *)buffer, &largeFont, 0, 50,
+                ST77XX_WHITE);
     delayMS(500);
   }
   return 0;

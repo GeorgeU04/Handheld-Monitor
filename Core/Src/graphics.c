@@ -1,8 +1,5 @@
 #include "graphics.h"
 #include "SPI.h"
-#include "ST7789.h"
-#include "USART.h"
-#include "font.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -26,9 +23,13 @@ void writeChar(const struct ST7789 *screen, uint8_t c, const struct font *font,
       SPI1Transfer((uint8_t)currentBackgroundColor);        // Send low byte
     }
   } else {
-    for (size_t i = 0; i < font->height; i++) {
-      for (size_t j = 0; j < font->width * font->bytesPerRow; j++) {
-        if ((font->glyph[font->height * index + i] >> (7 - j)) & 1U) {
+    for (size_t i = 0; i < font->height * font->bytesPerRow; i++) {
+      for (size_t j = 0; j < font->width; j++) {
+        if (j % 8 == 0 && j != 0)
+          i++;
+        if ((font->glyph[font->height * index * font->bytesPerRow + i] >>
+             (7 - (j % 8))) &
+            1U) {
           SPI1Transfer((uint8_t)(color >> 8)); // Send high byte
           SPI1Transfer((uint8_t)color);        // Send low byte
         } else {

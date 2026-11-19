@@ -3,7 +3,6 @@
 
 #include "ST7789.h"
 #include "font.h"
-#include <stdint.h>
 
 void writeString(const struct ST7789 *screen, const uint8_t *str,
                  const struct font *font, uint16_t x, uint16_t y,
