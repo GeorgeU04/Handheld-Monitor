@@ -82,7 +82,7 @@ void drawHorizontalLine(const struct ST7789 *screen, uint16_t x, uint16_t y,
 }
 
 void drawRectangle(const struct ST7789 *screen, uint16_t x, uint16_t y,
-                   uint16_t width, uint16_t height, uint8_t filled,
+                   uint16_t width, uint16_t height, bool filled,
                    uint16_t color) {
   if (filled) {
     setBoundCursor(screen, x, x + width - 1, y, y + height - 1);
