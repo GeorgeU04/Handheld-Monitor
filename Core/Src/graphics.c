@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include "SPI.h"
+#include "ST7789.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -7,7 +8,6 @@
 uint16_t currentBackgroundColor =
     ST77XX_WHITE; // White is default background color
 
-// Todo fix issue for larger han 1 byte per row fonts
 void writeChar(const struct ST7789 *screen, uint8_t c, const struct font *font,
                uint16_t x, uint16_t y, uint16_t color) {
   setBoundCursor(screen, x, x + font->width - 1, y, y + font->height - 1);
@@ -43,7 +43,6 @@ void writeChar(const struct ST7789 *screen, uint8_t c, const struct font *font,
   screen->CSPort->BSRR = (1 << screen->CSPin);
 };
 
-// Todo add user defined padding
 void writeString(const struct ST7789 *screen, const uint8_t *str,
                  const struct font *font, uint16_t x, uint16_t y,
                  uint16_t color) {
@@ -56,4 +55,49 @@ void writeString(const struct ST7789 *screen, const uint8_t *str,
 void setBackgroundColor(const struct ST7789 *screen, uint16_t backgroundColor) {
   currentBackgroundColor = backgroundColor;
   fillSolid(screen, backgroundColor);
+}
+
+void drawVerticalLine(const struct ST7789 *screen, uint16_t x, uint16_t y,
+                      uint16_t length, uint16_t color) {
+  setBoundCursor(screen, x, x, y, y + length - 1);
+  writeCommand(screen, ST77XX_RAMWR);
+  screen->CSPort->BSRR = (1 << screen->CSPin << 16);
+  screen->DCPort->BSRR = (1 << screen->DCPin); // Set for data
+  for (size_t i = 0; i < length; i++) {
+    SPI1Transfer((uint8_t)(color >> 8)); // Send high byte
+    SPI1Transfer((uint8_t)color);        // Send low byte
+  }
+}
+
+void drawHorizontalLine(const struct ST7789 *screen, uint16_t x, uint16_t y,
+                        uint16_t length, uint16_t color) {
+  setBoundCursor(screen, x, x + length - 1, y, y);
+  writeCommand(screen, ST77XX_RAMWR);
+  screen->CSPort->BSRR = (1 << screen->CSPin << 16);
+  screen->DCPort->BSRR = (1 << screen->DCPin); // Set for data
+  for (size_t i = 0; i < length; i++) {
+    SPI1Transfer((uint8_t)(color >> 8)); // Send high byte
+    SPI1Transfer((uint8_t)color);        // Send low byte
+  }
+}
+
+void drawRectangle(const struct ST7789 *screen, uint16_t x, uint16_t y,
+                   uint16_t width, uint16_t height, uint8_t filled,
+                   uint16_t color) {
+  if (filled) {
+    setBoundCursor(screen, x, x + width - 1, y, y + height - 1);
+    writeCommand(screen, ST77XX_RAMWR);
+    screen->CSPort->BSRR = (1 << screen->CSPin << 16);
+    screen->DCPort->BSRR = (1 << screen->DCPin); // Set for data
+    for (size_t i = 0; i < height * width; i++) {
+      SPI1Transfer((uint8_t)(color >> 8)); // Send high byte
+      SPI1Transfer((uint8_t)color);        // Send low byte
+    }
+  } else {
+    drawHorizontalLine(screen, x, y, width - 1, color);
+    drawHorizontalLine(screen, x, y + height - 1, width - 1, color);
+    drawVerticalLine(screen, x, y, height - 1, color);
+    drawVerticalLine(screen, x + width - 1, y, height - 1, color);
+  }
+  screen->CSPort->BSRR = (1 << screen->CSPin);
 }
