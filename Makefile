@@ -26,7 +26,9 @@ Core/Src/BME280.c \
 Core/Src/Timer.c \
 Core/Src/ST7789.c \
 Core/Src/font.c \
-Core/Src/graphics.c
+Core/Src/graphics.c \
+Core/Src/weatherIcons.c \
+Core/Src/pete.c 
 
 ASM_SOURCES = \
 lib/CMSIS/Device/Source/startup_stm32l432xx.s

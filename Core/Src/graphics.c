@@ -81,6 +81,31 @@ void drawHorizontalLine(const struct ST7789 *screen, uint16_t x, uint16_t y,
   }
 }
 
+void drawVerticalHalfCircle(const struct ST7789 *screen, uint16_t x, uint16_t y,
+                            uint16_t r, uint16_t color);
+
+void drawCylinder(const struct ST7789 *screen, uint16_t x, uint16_t y,
+                  uint16_t length, uint16_t height, uint16_t color,
+                  size_t maxValue) {
+  (void)maxValue;
+  drawHorizontalLine(screen, x, y, length - 1, color);
+  drawHorizontalLine(screen, x, y + height - 1, length - 1, color);
+  screen->CSPort->BSRR = (1 << screen->CSPin);
+}
+
+void drawBitmap(const struct ST7789 *screen, uint16_t x, uint16_t y,
+                uint16_t width, uint16_t height, const uint16_t *pixels) {
+  setBoundCursor(screen, x, x + width - 1, y, y + height - 1);
+  writeCommand(screen, ST77XX_RAMWR);
+  screen->CSPort->BSRR = (1 << screen->CSPin << 16);
+  screen->DCPort->BSRR = (1 << screen->DCPin); // Set for data
+  for (size_t i = 0; i < width * height; i++) {
+    SPI1Transfer((uint8_t)(pixels[i] >> 8)); // Send high byte
+    SPI1Transfer((uint8_t)pixels[i]);        // Send low byte
+  }
+  screen->CSPort->BSRR = (1 << screen->CSPin);
+}
+
 void drawRectangle(const struct ST7789 *screen, uint16_t x, uint16_t y,
                    uint16_t width, uint16_t height, bool filled,
                    uint16_t color) {

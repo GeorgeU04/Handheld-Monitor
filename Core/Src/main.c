@@ -6,7 +6,9 @@
 #include "USART.h"
 #include "font.h"
 #include "graphics.h"
+#include "pete.h"
 #include "stm32l432xx.h"
+#include "weatherIcons.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -180,7 +182,9 @@ int main(void) {
   initBME280(&sensor, GPIOB, 0);
   setBackgroundColor(&screen, ST77XX_BLACK);
   uint8_t buffer[128];
+  drawBitmap(&screen, 0, 0, CLOUD_WIDTH, CLOUD_HEIGHT, peteBitmap);
   drawRectangle(&screen, 0, 0, 140, 140, false, ST77XX_CYAN);
+  drawCylinder(&screen, 20, 260, 80, 10, ST77XX_CYAN, 100);
   while (1) {
     readWeatherData(&sensor);
     snprintf((char *)buffer, sizeof(buffer), "%.02f C\r\n",
@@ -195,7 +199,6 @@ int main(void) {
              sensor.data.humidity / 1024.0f);
     writeString(&screen, (const uint8_t *)buffer, &largeFont, 0, 200,
                 ST77XX_WHITE);
-    delayMS(500);
     delayMS(500);
   }
   return 0;
